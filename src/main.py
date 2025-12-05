@@ -14,7 +14,8 @@ def post_crypto_prices():
     print("Fetching crypto prices...")
     crypto_list = crypto_client.get_top_cryptos(limit=15)
     message = crypto_client.format_price_table(crypto_list)
-    tg.send_text(message)
+    # Send without Markdown to avoid parsing errors
+    tg.send_text(message, parse_mode=None)
 
 
 def post_crypto_news():

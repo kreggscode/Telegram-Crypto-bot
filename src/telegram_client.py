@@ -4,13 +4,14 @@ from .config import BOT_TOKEN, CHAT_ID
 BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 
-def send_text(text: str):
+def send_text(text: str, parse_mode: str = "Markdown"):
     url = f"{BASE_URL}/sendMessage"
     data = {
         "chat_id": CHAT_ID,
         "text": text,
-        "parse_mode": "Markdown"
     }
+    if parse_mode:
+        data["parse_mode"] = parse_mode
     resp = requests.post(url, data=data)
     return resp
 
