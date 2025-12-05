@@ -56,8 +56,8 @@ class CryptoDataClient:
         # Get current timestamp
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
         
-        message = f"💰 **TOP CRYPTOCURRENCY PRICES** 💰\n"
-        message += f"📅 *As of: {timestamp}*\n\n"
+        message = f"💰 TOP CRYPTOCURRENCY PRICES 💰\n"
+        message += f"📅 As of: {timestamp}\n\n"
         
         for crypto in crypto_list:
             # Format price
@@ -85,14 +85,14 @@ class CryptoDataClient:
             else:
                 mcap_str = f"${mcap:,.0f}"
             
-            message += f"**{crypto['rank']}. {crypto['name']} ({crypto['symbol']})**\n"
+            message += f"{crypto['rank']}. {crypto['name']} ({crypto['symbol']})\n"
             message += f"   💵 Price: {price_str}\n"
             message += f"   {change_emoji} 24h: {change_str}\n"
             message += f"   📊 MCap: {mcap_str}\n\n"
         
         message += "━━━━━━━━━━━━━━━━━━━━\n"
-        message += "🔄 *Data updates every few hours*\n"
-        message += "💡 *Powered by CoinGecko API*"
+        message += "🔄 Data updates every few hours\n"
+        message += "💡 Powered by CoinGecko API"
         
         return message
     
