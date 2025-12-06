@@ -38,3 +38,12 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Documentation - Exclude all markdown files except essential ones
+*.md
+!README.md
+!SETUP_GUIDE.md
+
+# Test files
+test_variety.py
+

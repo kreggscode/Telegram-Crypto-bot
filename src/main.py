@@ -6,7 +6,9 @@ from . import telegram_client as tg
 from . import scheduler_logic as sched
 from .templates import TEXT_TEMPLATES, IMAGE_TEMPLATES
 from .crypto_data_client import crypto_client
+from .topic_rotator import get_varied_prompt
 import random
+
 
 
 def post_crypto_prices():
@@ -36,63 +38,72 @@ def post_trending_coins():
 
 def post_crypto_education():
     """Post educational content about cryptocurrency"""
-    prompt = TEXT_TEMPLATES["crypto_education"]
+    base_prompt = TEXT_TEMPLATES["crypto_education"]
+    prompt = get_varied_prompt(base_prompt, "crypto_education")
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_trading_tips():
     """Post cryptocurrency trading tips"""
-    prompt = TEXT_TEMPLATES["trading_tips"]
+    base_prompt = TEXT_TEMPLATES["trading_tips"]
+    prompt = get_varied_prompt(base_prompt, "trading_tips")
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_crypto_security():
     """Post about cryptocurrency security best practices"""
-    prompt = TEXT_TEMPLATES["crypto_security"]
+    base_prompt = TEXT_TEMPLATES["crypto_security"]
+    prompt = get_varied_prompt(base_prompt, "crypto_security")
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_defi_explained():
     """Post about DeFi concepts"""
-    prompt = TEXT_TEMPLATES["defi_explained"]
+    base_prompt = TEXT_TEMPLATES["defi_explained"]
+    prompt = get_varied_prompt(base_prompt, "defi_explained")
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_market_analysis():
     """Post market analysis and trends"""
-    prompt = TEXT_TEMPLATES["market_analysis"]
+    base_prompt = TEXT_TEMPLATES["market_analysis"]
+    prompt = get_varied_prompt(base_prompt, "market_analysis")
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_crypto_project():
     """Post about a cryptocurrency project"""
-    prompt = TEXT_TEMPLATES["crypto_project"]
+    base_prompt = TEXT_TEMPLATES["crypto_project"]
+    prompt = get_varied_prompt(base_prompt, "crypto_project")
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_nft_knowledge():
     """Post about NFTs"""
-    prompt = TEXT_TEMPLATES["nft_knowledge"]
+    base_prompt = TEXT_TEMPLATES["nft_knowledge"]
+    prompt = get_varied_prompt(base_prompt, "nft_knowledge")
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_beginner_guide():
     """Post beginner-friendly crypto guide"""
-    prompt = TEXT_TEMPLATES["beginner_guide"]
+    base_prompt = TEXT_TEMPLATES["beginner_guide"]
+    prompt = get_varied_prompt(base_prompt, "beginner_guide")
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
 
 def post_crypto_terminology():
     """Post explanation of crypto terms"""
-    prompt = TEXT_TEMPLATES["crypto_terminology"]
+    base_prompt = TEXT_TEMPLATES["crypto_terminology"]
+    prompt = get_varied_prompt(base_prompt, "crypto_terminology")
     text = ai.generate_text(prompt)
     tg.send_text(text)
 
@@ -117,7 +128,9 @@ def post_image_plus_text():
     image_keys = list(IMAGE_TEMPLATES.keys())
     selected_image = random.choice(image_keys)
     
-    text_prompt = TEXT_TEMPLATES[selected_text]
+    # Use topic rotation for varied captions
+    base_prompt = TEXT_TEMPLATES[selected_text]
+    text_prompt = get_varied_prompt(base_prompt, selected_text)
     img_prompt = IMAGE_TEMPLATES[selected_image]
 
     caption = ai.generate_text(text_prompt)
