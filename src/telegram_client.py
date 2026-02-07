@@ -12,8 +12,22 @@ def send_text(text: str, parse_mode: str = "Markdown"):
     }
     if parse_mode:
         data["parse_mode"] = parse_mode
-    resp = requests.post(url, data=data)
-    return resp
+    
+    try:
+        resp = requests.post(url, data=data, timeout=30)
+        if resp.status_code != 200:
+            # If Markdown fails, try sending as plain text
+            if parse_mode == "Markdown":
+                print(f"Telegram Markdown failed, retrying without formatting...")
+                data.pop("parse_mode", None)
+                resp = requests.post(url, data=data, timeout=30)
+            
+            if resp.status_code != 200:
+                print(f"Telegram API Error (Text): {resp.status_code} - {resp.text}")
+        return resp
+    except Exception as e:
+        print(f"Telegram Connection Error: {e}")
+        return None
 
 
 def send_photo(image_url: str, caption: str = ""):
@@ -23,8 +37,14 @@ def send_photo(image_url: str, caption: str = ""):
         "photo": image_url,
         "caption": caption
     }
-    resp = requests.post(url, data=data)
-    return resp
+    try:
+        resp = requests.post(url, data=data, timeout=30)
+        if resp.status_code != 200:
+            print(f"Telegram API Error (Photo): {resp.status_code} - {resp.text}")
+        return resp
+    except Exception as e:
+        print(f"Telegram Photo Connection Error: {e}")
+        return None
 
 
 def send_poll(question: str, options: list[str]):
@@ -36,8 +56,14 @@ def send_poll(question: str, options: list[str]):
         "options": json.dumps(options),
         "is_anonymous": False
     }
-    resp = requests.post(url, data=data)
-    return resp
+    try:
+        resp = requests.post(url, data=data, timeout=30)
+        if resp.status_code != 200:
+            print(f"Telegram API Error (Poll): {resp.status_code} - {resp.text}")
+        return resp
+    except Exception as e:
+        print(f"Telegram Poll Connection Error: {e}")
+        return None
 
 
 def send_thread(messages: list[str]):
