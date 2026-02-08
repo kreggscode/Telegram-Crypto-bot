@@ -62,7 +62,7 @@ def send_poll(question: str, options: list[str], correct_option_id: int = None, 
     """Send a native Telegram Quiz."""
     import json
     url = f"{BASE_URL}/sendPoll"
-    payload = {"chat_id": CHAT_ID, "question": question[:300], "options": json.dumps(options[:10]), "is_anonymous": False}
+    payload = {"chat_id": CHAT_ID, "question": question[:300], "options": json.dumps(options[:10]), "is_anonymous": True}
     if correct_option_id is not None:
         payload["type"] = "quiz"
         payload["correct_option_id"] = int(correct_option_id)
