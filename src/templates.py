@@ -103,10 +103,15 @@ TEXT_TEMPLATES = {
         "Use emojis and keep each section clear."
     ),
     "poll_question": (
-        "Create ONE multiple choice cryptocurrency or blockchain question. "
-        "Format strictly as: Question? | Option A, Option B, Option C, Option D. "
-        "Make it educational and engaging, suitable for a Telegram poll. "
-        "Focus on crypto knowledge, market trends, or blockchain technology."
+        "Create ONE challenging cryptocurrency multiple-choice quiz question. "
+        "STRICT FORMAT:\n"
+        "Question: [The question text]\n"
+        "A: [Option 1]\n"
+        "B: [Option 2]\n"
+        "C: [Option 3]\n"
+        "D: [Option 4]\n"
+        "Correct: [Answer Letter]\n"
+        "Explanation: [Brief explanation of why that's correct]"
     ),
     "daily_challenge": (
         "Create a fun cryptocurrency quiz or challenge for learners. "

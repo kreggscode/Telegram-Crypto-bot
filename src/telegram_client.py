@@ -75,7 +75,8 @@ def send_photo(image_url: str, caption: str = ""):
         return None
 
 
-def send_poll(question: str, options: list[str]):
+def send_poll(question: str, options: list[str], correct_option_id: int = None, explanation: str = None):
+    """Send a Telegram poll. If correct_option_id is provided, it becomes a Quiz."""
     import json
     url = f"{BASE_URL}/sendPoll"
     data = {
@@ -84,6 +85,14 @@ def send_poll(question: str, options: list[str]):
         "options": json.dumps(options),
         "is_anonymous": False
     }
+
+    if correct_option_id is not None:
+        data["type"] = "quiz"
+        data["correct_option_id"] = correct_option_id
+        if explanation:
+            data["explanation"] = explanation
+            data["explanation_parse_mode"] = "Markdown"
+
     try:
         resp = requests.post(url, data=data, timeout=30)
         if resp.status_code != 200:
