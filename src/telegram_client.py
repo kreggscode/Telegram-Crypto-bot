@@ -5,42 +5,69 @@ BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 
 def ensure_markdown_closed(text: str) -> str:
-    """Ensure all markdown tags are properly closed to avoid Telegram parser errors."""
+    """
+    Robustly ensure all Telegram Markdown (V1) tags are properly closed.
+    V1 uses: *bold*, _italic_, `inline code`, ```pre/code blocks```, [text](url)
+    """
     if text.count('```') % 2 != 0:
         text += '\n```'
-    if text.count('**') % 2 != 0:
-        text += '**'
-    if text.count('*') % 2 != 0:
-        text += '*'
-    if text.count('_') % 2 != 0:
-        text += '_'
-    return text
+    
+    parts = text.split('```')
+    for i in range(0, len(parts), 2):
+        chunk = parts[i]
+        if chunk.count('`') % 2 != 0:
+            chunk += '`'
+        subparts = chunk.split('`')
+        for j in range(0, len(subparts), 2):
+            subchunk = subparts[j]
+            if subchunk.count('*') % 2 != 0:
+                subchunk += '*'
+            if subchunk.count('_') % 2 != 0:
+                subchunk += '_'
+            open_brackets = subchunk.count('[')
+            closed_brackets = subchunk.count(']')
+            if open_brackets > closed_brackets:
+                subchunk += ']' * (open_brackets - closed_brackets)
+            subparts[j] = subchunk
+        parts[i] = '`'.join(subparts)
+    return '```'.join(parts)
 
 
 def send_text(text: str, parse_mode: str = "Markdown"):
     """Send text message with integrity checks for Markdown."""
-    # Telegram limit is 4096 characters. Truncate safely.
     if len(text) > 4000:
-        text = text[:3900]
+        text = text[:3800]
         last_space = text.rfind(' ')
         if last_space > 3500:
             text = text[:last_space]
-        text = ensure_markdown_closed(text)
         text += "\n\n...(truncated)"
+    
+    text = ensure_markdown_closed(text)
     
     url = f"{BASE_URL}/sendMessage"
     data = {
         "chat_id": CHAT_ID,
         "text": text,
+        "parse_mode": parse_mode
     }
-    if parse_mode:
-        data["parse_mode"] = parse_mode
     
     try:
         resp = requests.post(url, data=data, timeout=30)
         if resp.status_code != 200:
-            print(f"Telegram API Error (Text): {resp.status_code} - {resp.text}")
-            # Do NOT fallback to plain text if we have markdown entities that would break
+            error_data = resp.json() if resp.status_code == 400 else {}
+            if "can't parse" in error_data.get("description", "").lower():
+                print(f"Markdown failed, retrying with escaped technical characters...")
+                data["text"] = text.replace("_", "\\_")
+                resp = requests.post(url, data=data, timeout=30)
+                
+                if resp.status_code != 200:
+                    print(f"Advanced sanitization failed, trying Clean fallback...")
+                    data.pop("parse_mode", None)
+                    data["text"] = text.replace("*", "").replace("_", "").replace("`", "")
+                    resp = requests.post(url, data=data, timeout=30)
+            
+            if resp.status_code != 200:
+                print(f"Telegram API Error (Text): {resp.status_code} - {resp.text}")
         return resp
     except Exception as e:
         print(f"Telegram Connection Error: {e}")
