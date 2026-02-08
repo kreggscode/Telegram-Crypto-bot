@@ -5,6 +5,10 @@ BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 
 def send_text(text: str, parse_mode: str = "Markdown"):
+    # Telegram limit is 4096 characters. Truncate if extreme.
+    if len(text) > 4000:
+        text = text[:3997] + "..."
+    
     url = f"{BASE_URL}/sendMessage"
     data = {
         "chat_id": CHAT_ID,
@@ -31,6 +35,10 @@ def send_text(text: str, parse_mode: str = "Markdown"):
 
 
 def send_photo(image_url: str, caption: str = ""):
+    # Telegram limit for captions is 1024 characters
+    if len(caption) > 1000:
+        caption = caption[:997] + "..."
+    
     url = f"{BASE_URL}/sendPhoto"
     data = {
         "chat_id": CHAT_ID,
