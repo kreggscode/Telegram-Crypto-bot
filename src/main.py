@@ -173,7 +173,10 @@ def post_daily_challenge():
     """Post a daily crypto challenge or quiz"""
     prompt = TEXT_TEMPLATES["daily_challenge"]
     text = ai.generate_text(prompt)
-    tg.send_text(text)
+    resp = tg.send_text(text)
+    if resp and resp.status_code == 200:
+        # For daily challenge, we can trigger a related quiz
+        post_quiz_followup("Daily Crypto challenge")
 
 
 def post_image_plus_text():
@@ -204,10 +207,12 @@ def post_image_plus_text():
 
 def post_poll():
     """Post a cryptocurrency quiz poll in Quiz Mode"""
+    print("Generating standalone quiz poll...")
     poll_prompt = TEXT_TEMPLATES["poll_question"]
     raw = ai.generate_text(poll_prompt)
 
     try:
+        import re
         lines = [l.strip() for l in raw.split('\n') if l.strip()]
         q_text = ""
         options = []
@@ -215,32 +220,30 @@ def post_poll():
         explanation = ""
         
         for line in lines:
-            if line.lower().startswith("question:"):
+            line_lower = line.lower()
+            if line_lower.startswith("question:"):
                 q_text = line.split(":", 1)[1].strip()
-            elif line.upper().startswith("A:"):
-                options.append(line.split(":", 1)[1].strip())
-            elif line.upper().startswith("B:"):
-                options.append(line.split(":", 1)[1].strip())
-            elif line.upper().startswith("C:"):
-                options.append(line.split(":", 1)[1].strip())
-            elif line.upper().startswith("D:"):
-                options.append(line.split(":", 1)[1].strip())
-            elif line.lower().startswith("correct:"):
-                correct_letter = line.split(":", 1)[1].strip().upper()
-            elif line.lower().startswith("explanation:"):
+            elif re.match(r'^[A-D][:.)]\s+', line, re.I):
+                option_content = re.sub(r'^[A-D][:.)]\s+', '', line, flags=re.I).strip()
+                options.append(option_content)
+            elif "correct:" in line_lower:
+                match = re.search(r'[A-D]', line_lower.split(":", 1)[1], re.I)
+                if match:
+                    correct_letter = match.group().upper()
+            elif "explanation:" in line_lower:
                 explanation = line.split(":", 1)[1].strip()
         
+        if not q_text and lines:
+            q_text = lines[0]
+            
         letter_to_index = {"A": 0, "B": 1, "C": 2, "D": 3}
-        correct_id = letter_to_index.get(correct_letter[0] if correct_letter else "A", 0)
+        correct_id = letter_to_index.get(correct_letter if correct_letter else "A", 0)
         
         if q_text and len(options) >= 2:
+            print(f"Sending standalone quiz...")
             tg.send_poll(q_text, options[:10], correct_option_id=correct_id, explanation=explanation)
         else:
-            print(f"Poll parsing failed. Raw: {raw[:100]}")
-            # Fallback to old simple format if AI ignored instructions
-            if "|" in raw:
-                q_part, opts_part = raw.split("|", 1)
-                tg.send_poll(q_part.strip(), [o.strip() for o in opts_part.split(",")])
+            print(f"Poll parsing failed. Options: {len(options)}. Raw: {raw[:50]}")
     except Exception as e:
         print(f"Error in post_poll: {e}")
 
@@ -252,9 +255,13 @@ def post_thread():
     # Split by double-newline into sections
     parts = [p.strip() for p in raw.split("\n\n") if p.strip()]
     if len(parts) == 0:
-        tg.send_text(raw)
+        resp = tg.send_text(raw)
+        if resp and resp.status_code == 200:
+            post_quiz_followup("General Crypto deep-dive")
     else:
         tg.send_thread(parts)
+        # Quizzes following threads are very effective
+        post_quiz_followup("Crypto Thread Topic")
 
 
 def main():
