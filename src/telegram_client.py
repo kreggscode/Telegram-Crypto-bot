@@ -4,10 +4,29 @@ from .config import BOT_TOKEN, CHAT_ID
 BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 
+def ensure_markdown_closed(text: str) -> str:
+    """Ensure all markdown tags are properly closed to avoid Telegram parser errors."""
+    if text.count('```') % 2 != 0:
+        text += '\n```'
+    if text.count('**') % 2 != 0:
+        text += '**'
+    if text.count('*') % 2 != 0:
+        text += '*'
+    if text.count('_') % 2 != 0:
+        text += '_'
+    return text
+
+
 def send_text(text: str, parse_mode: str = "Markdown"):
-    # Telegram limit is 4096 characters. Truncate if extreme.
+    """Send text message with integrity checks for Markdown."""
+    # Telegram limit is 4096 characters. Truncate safely.
     if len(text) > 4000:
-        text = text[:3997] + "..."
+        text = text[:3900]
+        last_space = text.rfind(' ')
+        if last_space > 3500:
+            text = text[:last_space]
+        text = ensure_markdown_closed(text)
+        text += "\n\n...(truncated)"
     
     url = f"{BASE_URL}/sendMessage"
     data = {
@@ -20,14 +39,8 @@ def send_text(text: str, parse_mode: str = "Markdown"):
     try:
         resp = requests.post(url, data=data, timeout=30)
         if resp.status_code != 200:
-            # If Markdown fails, try sending as plain text
-            if parse_mode == "Markdown":
-                print(f"Telegram Markdown failed, retrying without formatting...")
-                data.pop("parse_mode", None)
-                resp = requests.post(url, data=data, timeout=30)
-            
-            if resp.status_code != 200:
-                print(f"Telegram API Error (Text): {resp.status_code} - {resp.text}")
+            print(f"Telegram API Error (Text): {resp.status_code} - {resp.text}")
+            # Do NOT fallback to plain text if we have markdown entities that would break
         return resp
     except Exception as e:
         print(f"Telegram Connection Error: {e}")
@@ -35,15 +48,22 @@ def send_text(text: str, parse_mode: str = "Markdown"):
 
 
 def send_photo(image_url: str, caption: str = ""):
+    """Send photo with protected caption integrity."""
     # Telegram limit for captions is 1024 characters
     if len(caption) > 1000:
-        caption = caption[:997] + "..."
+        caption = caption[:950]
+        last_space = caption.rfind(' ')
+        if last_space > 800:
+            caption = caption[:last_space]
+        caption = ensure_markdown_closed(caption)
+        caption += "..."
     
     url = f"{BASE_URL}/sendPhoto"
     data = {
         "chat_id": CHAT_ID,
         "photo": image_url,
-        "caption": caption
+        "caption": caption,
+        "parse_mode": "Markdown"
     }
     try:
         resp = requests.post(url, data=data, timeout=30)

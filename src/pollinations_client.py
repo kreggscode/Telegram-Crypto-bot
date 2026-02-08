@@ -32,8 +32,8 @@ def generate_text(prompt: str) -> str:
     data = {
         "model": "openai",
         "messages": [
-            {"role": "system", "content": "You are a helpful assistant specializing in cryptocurrency and blockchain."},
-            {"role": "user", "content": f"{prompt}\n\n[Context: Date={timestamp}, Seed={seed}, Ensure unique content]"}
+            {"role": "system", "content": "You are a professional cryptocurrency analyst. Provide ONLY the requested content without metadata, dates, or introductory/concluding text."},
+            {"role": "user", "content": f"{prompt}\n\nSTRICT: Code blocks must be properly closed. No intro/outro. (Ref: {seed})"}
         ],
         "seed": seed
     }
