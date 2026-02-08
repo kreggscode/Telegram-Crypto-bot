@@ -14,11 +14,11 @@ def post_quiz_followup(topic: str):
     """Generate and post a quiz based on the given topic."""
     print(f"Generating follow-up quiz for: {topic}...")
     quiz_prompt = TEXT_TEMPLATES["poll_question"]
-    # We use the same prompt as post_poll but focused on the topic
     prompt = f"Focus on this specific topic: '{topic}'. {quiz_prompt}"
     raw = ai.generate_text(prompt)
 
     try:
+        import re
         lines = [l.strip() for l in raw.split('\n') if l.strip()]
         q_text = ""
         options = []
@@ -26,27 +26,30 @@ def post_quiz_followup(topic: str):
         explanation = ""
         
         for line in lines:
-            if line.lower().startswith("question:"):
+            line_lower = line.lower()
+            if line_lower.startswith("question:"):
                 q_text = line.split(":", 1)[1].strip()
-            elif line.upper().startswith("A:"):
-                options.append(line.split(":", 1)[1].strip())
-            elif line.upper().startswith("B:"):
-                options.append(line.split(":", 1)[1].strip())
-            elif line.upper().startswith("C:"):
-                options.append(line.split(":", 1)[1].strip())
-            elif line.upper().startswith("D:"):
-                options.append(line.split(":", 1)[1].strip())
-            elif line.lower().startswith("correct:"):
-                correct_letter = line.split(":", 1)[1].strip().upper()
-            elif line.lower().startswith("explanation:"):
+            elif re.match(r'^[A-D][:.)]\s+', line, re.I):
+                option_content = re.sub(r'^[A-D][:.)]\s+', '', line, flags=re.I).strip()
+                options.append(option_content)
+            elif "correct:" in line_lower:
+                match = re.search(r'[A-D]', line_lower.split(":", 1)[1])
+                if match:
+                    correct_letter = match.group().upper()
+            elif "explanation:" in line_lower:
                 explanation = line.split(":", 1)[1].strip()
         
+        if not q_text and lines:
+            q_text = lines[0]
+
         letter_to_index = {"A": 0, "B": 1, "C": 2, "D": 3}
-        correct_id = letter_to_index.get(correct_letter[0] if correct_letter else "A", 0)
+        correct_id = letter_to_index.get(correct_letter if correct_letter else "A", 0)
         
         if q_text and len(options) >= 2:
             print(f"Sending follow-up quiz for {topic}...")
             tg.send_poll(q_text, options[:10], correct_option_id=correct_id, explanation=explanation)
+        else:
+            print(f"Quiz parsing failed. Options: {len(options)}. Raw: {raw[:50]}")
     except Exception as e:
         print(f"Error in post_quiz_followup: {e}")
 
