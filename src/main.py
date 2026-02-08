@@ -6,9 +6,49 @@ from . import telegram_client as tg
 from . import scheduler_logic as sched
 from .templates import TEXT_TEMPLATES, IMAGE_TEMPLATES
 from .crypto_data_client import crypto_client
-from .topic_rotator import get_varied_prompt
+from .topic_rotator import get_varied_prompt, get_topic_and_varied_prompt
 import random
 
+
+def post_quiz_followup(topic: str):
+    """Generate and post a quiz based on the given topic."""
+    print(f"Generating follow-up quiz for: {topic}...")
+    quiz_prompt = TEXT_TEMPLATES["poll_question"]
+    # We use the same prompt as post_poll but focused on the topic
+    prompt = f"Focus on this specific topic: '{topic}'. {quiz_prompt}"
+    raw = ai.generate_text(prompt)
+
+    try:
+        lines = [l.strip() for l in raw.split('\n') if l.strip()]
+        q_text = ""
+        options = []
+        correct_letter = ""
+        explanation = ""
+        
+        for line in lines:
+            if line.lower().startswith("question:"):
+                q_text = line.split(":", 1)[1].strip()
+            elif line.upper().startswith("A:"):
+                options.append(line.split(":", 1)[1].strip())
+            elif line.upper().startswith("B:"):
+                options.append(line.split(":", 1)[1].strip())
+            elif line.upper().startswith("C:"):
+                options.append(line.split(":", 1)[1].strip())
+            elif line.upper().startswith("D:"):
+                options.append(line.split(":", 1)[1].strip())
+            elif line.lower().startswith("correct:"):
+                correct_letter = line.split(":", 1)[1].strip().upper()
+            elif line.lower().startswith("explanation:"):
+                explanation = line.split(":", 1)[1].strip()
+        
+        letter_to_index = {"A": 0, "B": 1, "C": 2, "D": 3}
+        correct_id = letter_to_index.get(correct_letter[0] if correct_letter else "A", 0)
+        
+        if q_text and len(options) >= 2:
+            print(f"Sending follow-up quiz for {topic}...")
+            tg.send_poll(q_text, options[:10], correct_option_id=correct_id, explanation=explanation)
+    except Exception as e:
+        print(f"Error in post_quiz_followup: {e}")
 
 
 def post_crypto_prices():
@@ -39,73 +79,91 @@ def post_trending_coins():
 def post_crypto_education():
     """Post educational content about cryptocurrency"""
     base_prompt = TEXT_TEMPLATES["crypto_education"]
-    prompt = get_varied_prompt(base_prompt, "crypto_education")
+    topic, prompt = get_topic_and_varied_prompt(base_prompt, "crypto_education")
     text = ai.generate_text(prompt)
-    tg.send_text(text)
+    resp = tg.send_text(text)
+    if resp and resp.status_code == 200:
+        post_quiz_followup(topic)
 
 
 def post_trading_tips():
     """Post cryptocurrency trading tips"""
     base_prompt = TEXT_TEMPLATES["trading_tips"]
-    prompt = get_varied_prompt(base_prompt, "trading_tips")
+    topic, prompt = get_topic_and_varied_prompt(base_prompt, "trading_tips")
     text = ai.generate_text(prompt)
-    tg.send_text(text)
+    resp = tg.send_text(text)
+    if resp and resp.status_code == 200:
+        post_quiz_followup(topic)
 
 
 def post_crypto_security():
     """Post about cryptocurrency security best practices"""
     base_prompt = TEXT_TEMPLATES["crypto_security"]
-    prompt = get_varied_prompt(base_prompt, "crypto_security")
+    topic, prompt = get_topic_and_varied_prompt(base_prompt, "crypto_security")
     text = ai.generate_text(prompt)
-    tg.send_text(text)
+    resp = tg.send_text(text)
+    if resp and resp.status_code == 200:
+        post_quiz_followup(topic)
 
 
 def post_defi_explained():
     """Post about DeFi concepts"""
     base_prompt = TEXT_TEMPLATES["defi_explained"]
-    prompt = get_varied_prompt(base_prompt, "defi_explained")
+    topic, prompt = get_topic_and_varied_prompt(base_prompt, "defi_explained")
     text = ai.generate_text(prompt)
-    tg.send_text(text)
+    resp = tg.send_text(text)
+    if resp and resp.status_code == 200:
+        post_quiz_followup(topic)
 
 
 def post_market_analysis():
     """Post market analysis and trends"""
     base_prompt = TEXT_TEMPLATES["market_analysis"]
-    prompt = get_varied_prompt(base_prompt, "market_analysis")
+    topic, prompt = get_topic_and_varied_prompt(base_prompt, "market_analysis")
     text = ai.generate_text(prompt)
-    tg.send_text(text)
+    resp = tg.send_text(text)
+    if resp and resp.status_code == 200:
+        post_quiz_followup(topic)
 
 
 def post_crypto_project():
     """Post about a cryptocurrency project"""
     base_prompt = TEXT_TEMPLATES["crypto_project"]
-    prompt = get_varied_prompt(base_prompt, "crypto_project")
+    topic, prompt = get_topic_and_varied_prompt(base_prompt, "crypto_project")
     text = ai.generate_text(prompt)
-    tg.send_text(text)
+    resp = tg.send_text(text)
+    if resp and resp.status_code == 200:
+        post_quiz_followup(topic)
 
 
 def post_nft_knowledge():
     """Post about NFTs"""
     base_prompt = TEXT_TEMPLATES["nft_knowledge"]
-    prompt = get_varied_prompt(base_prompt, "nft_knowledge")
+    topic, prompt = get_topic_and_varied_prompt(base_prompt, "nft_knowledge")
     text = ai.generate_text(prompt)
-    tg.send_text(text)
+    resp = tg.send_text(text)
+    if resp and resp.status_code == 200:
+        post_quiz_followup(topic)
 
 
 def post_beginner_guide():
     """Post beginner-friendly crypto guide"""
     base_prompt = TEXT_TEMPLATES["beginner_guide"]
-    prompt = get_varied_prompt(base_prompt, "beginner_guide")
+    topic, prompt = get_topic_and_varied_prompt(base_prompt, "beginner_guide")
     text = ai.generate_text(prompt)
-    tg.send_text(text)
+    resp = tg.send_text(text)
+    if resp and resp.status_code == 200:
+        post_quiz_followup(topic)
 
 
 def post_crypto_terminology():
     """Post explanation of crypto terms"""
     base_prompt = TEXT_TEMPLATES["crypto_terminology"]
-    prompt = get_varied_prompt(base_prompt, "crypto_terminology")
+    topic, prompt = get_topic_and_varied_prompt(base_prompt, "crypto_terminology")
     text = ai.generate_text(prompt)
-    tg.send_text(text)
+    resp = tg.send_text(text)
+    if resp and resp.status_code == 200:
+        post_quiz_followup(topic)
 
 
 def post_daily_challenge():
@@ -130,13 +188,15 @@ def post_image_plus_text():
     
     # Use topic rotation for varied captions
     base_prompt = TEXT_TEMPLATES[selected_text]
-    text_prompt = get_varied_prompt(base_prompt, selected_text)
+    topic, text_prompt = get_topic_and_varied_prompt(base_prompt, selected_text)
     img_prompt = IMAGE_TEMPLATES[selected_image]
 
     caption = ai.generate_text(text_prompt)
     img_url = ai.image_url(img_prompt)
 
-    tg.send_photo(img_url, caption)
+    resp = tg.send_photo(img_url, caption)
+    if resp and resp.status_code == 200:
+        post_quiz_followup(topic)
 
 
 def post_poll():

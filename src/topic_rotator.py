@@ -242,3 +242,12 @@ def get_varied_prompt(base_template: str, category: str) -> str:
         return f"Focus on this specific topic: '{specific_topic}'. {base_template}"
     
     return base_template
+
+
+def get_topic_and_varied_prompt(base_template: str, category: str) -> tuple[str, str]:
+    """Return both the selected topic and the enhanced prompt."""
+    specific_topic = get_random_topic(category)
+    if specific_topic:
+        prompt = f"Focus on this specific topic: '{specific_topic}'. {base_template}"
+        return specific_topic, prompt
+    return "Cryptocurrency", base_template
