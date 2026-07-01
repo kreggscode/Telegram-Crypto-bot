@@ -2,17 +2,25 @@ name: Auto Post Crypto Content
 
 on:
   schedule:
-    # Morning Post (8:00 AM IST = 2:30 AM UTC)
-    - cron: '30 2 * * *'
+    # Slot 1: 6:00 AM Local = (6 - TIMEZONE_OFFSET_HOURS) UTC
+    #   For IST (offset 5.5): 6:00 AM IST = 0:30 AM UTC
+    - cron: '30 0 * * *'
     
-    # Afternoon Post (2:00 PM IST = 8:30 AM UTC)
+    # Slot 2: 10:00 AM Local = (10 - TIMEZONE_OFFSET_HOURS) UTC
+    #   For IST (offset 5.5): 10:00 AM IST = 4:30 AM UTC
+    - cron: '30 4 * * *'
+    
+    # Slot 3: 2:00 PM Local = (14 - TIMEZONE_OFFSET_HOURS) UTC
+    #   For IST (offset 5.5): 2:00 PM IST = 8:30 AM UTC
     - cron: '30 8 * * *'
     
-    # Evening Post (8:00 PM IST = 2:30 PM UTC)
-    - cron: '30 14 * * *'
+    # Slot 4: 6:00 PM Local = (18 - TIMEZONE_OFFSET_HOURS) UTC
+    #   For IST (offset 5.5): 6:00 PM IST = 12:30 PM UTC
+    - cron: '30 12 * * *'
     
-    # Late Night Post (11:00 PM IST = 5:30 PM UTC) - Optional
-    - cron: '30 17 * * *'
+    # Slot 5: 10:00 PM Local = (22 - TIMEZONE_OFFSET_HOURS) UTC
+    #   For IST (offset 5.5): 10:00 PM IST = 4:30 PM UTC
+    - cron: '30 16 * * *'
   
   # Allow manual triggering from GitHub Actions tab
   workflow_dispatch:
