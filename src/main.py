@@ -57,7 +57,7 @@ def post_quiz_followup(topic: str):
 def post_crypto_prices():
     """Post top cryptocurrency prices with real-time data"""
     print("Fetching crypto prices...")
-    crypto_list = crypto_client.get_top_cryptos(limit=15)
+    crypto_list = crypto_client.get_top_cryptos(limit=30)
     message = crypto_client.format_price_table(crypto_list)
     # Send without Markdown to avoid parsing errors
     tg.send_text(message, parse_mode=None)
