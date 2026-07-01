@@ -19,6 +19,7 @@ class CryptoDataClient:
         """
         try:
             # Get top coins by market cap
+            print(f"Calling CoinGecko API for top {limit} cryptos...")
             data = self.cg.get_coins_markets(
                 vs_currency='usd',
                 order='market_cap_desc',
@@ -28,6 +29,7 @@ class CryptoDataClient:
                 price_change_percentage='24h'
             )
             
+            print(f"CoinGecko returned {len(data)} coins")
             crypto_list = []
             for coin in data:
                 crypto_info = {
@@ -41,6 +43,7 @@ class CryptoDataClient:
                 }
                 crypto_list.append(crypto_info)
             
+            print(f"Formatted {len(crypto_list)} coins successfully")
             return crypto_list
         except Exception as e:
             print(f"Error fetching crypto prices: {e}")
@@ -53,8 +56,8 @@ class CryptoDataClient:
         if not crypto_list:
             return "❌ Unable to fetch crypto prices at the moment."
         
-        # Get current timestamp
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
+        # Get current UTC timestamp
+        timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
         
         message = f"💰 TOP CRYPTOCURRENCY PRICES 💰\n"
         message += f"📅 As of: {timestamp}\n\n"

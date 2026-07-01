@@ -1,15 +1,16 @@
 """
 Scheduler Logic - Determines what type of content to post based on time
-Optimized for cryptocurrency content with 3-4 posts per day
+Optimized for cryptocurrency content with 5 posts per day —
+  crypto prices sent RELIABLY 5 times a day at fixed times.
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from .config import TIMEZONE_OFFSET_HOURS
 import random
 
 
 def get_local_hour_24() -> int:
     """Return current local hour (0-23) based on TIMEZONE_OFFSET_HOURS."""
-    now_utc = datetime.utcnow()
+    now_utc = datetime.now(timezone.utc)
     local = now_utc + timedelta(hours=TIMEZONE_OFFSET_HOURS)
     return local.hour
 
@@ -17,14 +18,19 @@ def get_local_hour_24() -> int:
 def decide_post_type() -> str:
     """
     Decide what to post based on hour.
-    Posts 3-4 times per day optimized for crypto content:
-    - Morning (8-10 AM): Crypto Prices & Market Data (PRIORITY)
-    - Afternoon (2-4 PM): Educational Content & News
-    - Evening (8-10 PM): Interactive Content (Polls, Challenges, Images)
-    - Late Night (11 PM-12 AM): Trending Coins & Analysis (Optional)
+    Posts 5 times per day — crypto prices at 5 fixed times, other content fills the rest.
+
+    ALWAYS posts crypto prices at these hours:
+      - Slot 1: 6-7 AM   (Morning Open)
+      - Slot 2: 10-11 AM (Mid-Morning)
+      - Slot 3: 2-3 PM   (Afternoon)
+      - Slot 4: 6-7 PM   (Evening)
+      - Slot 5: 10-11 PM (Night Close)
+
+    Other hours fall back to varied educational/interactive content.
 
     Returns one of:
-    - "crypto_prices" (Real-time price data - MOST IMPORTANT)
+    - "crypto_prices" (Real-time price data - ALWAYS at price slots)
     - "crypto_news" (Latest news)
     - "trending_coins" (Trending cryptocurrencies)
     - "crypto_education" (Educational content)
@@ -43,40 +49,59 @@ def decide_post_type() -> str:
     """
     hour = get_local_hour_24()
 
-    # Morning Post (8-10 AM): CRYPTO PRICES & MARKET DATA (Priority!)
-    if 8 <= hour < 10:
-        # 70% chance of prices, 30% chance of news/trending
-        morning_weighted = (
-            ["crypto_prices"] * 7 + 
-            ["crypto_news"] * 2 + 
-            ["trending_coins"] * 1
-        )
-        return random.choice(morning_weighted)
-    
-    # Afternoon Post (2-4 PM): EDUCATIONAL CONTENT & NEWS
-    elif 14 <= hour < 16:
-        afternoon_options = [
+    # ── 5 FIXED PRICE SLOTS (always posts crypto_prices) ──
+    price_slots = {
+        6:  "Morning Open   🌅",
+        10: "Mid-Morning    ☀️",
+        14: "Afternoon      🌤️",
+        18: "Evening        🌆",
+        22: "Night Close    🌙",
+    }
+
+    if hour in price_slots:
+        return "crypto_prices"
+
+    # ── EDUCATIONAL / INTERACTIVE SLOTS (fill the remaining runs) ──
+    # Morning fill (7-9 AM)
+    if 7 <= hour <= 9:
+        morning_options = [
+            "crypto_news", "trending_coins",
+            "crypto_education", "trading_tips",
+        ]
+        return random.choice(morning_options)
+
+    # Mid-day fill (11 AM - 1 PM)
+    elif 11 <= hour <= 13:
+        midday_options = [
             "crypto_education", "trading_tips", "crypto_security",
             "defi_explained", "crypto_project", "nft_knowledge",
-            "beginner_guide", "crypto_terminology", "crypto_news"
+            "beginner_guide", "crypto_terminology",
+        ]
+        return random.choice(midday_options)
+
+    # Afternoon fill (3-5 PM)
+    elif 15 <= hour <= 17:
+        afternoon_options = [
+            "crypto_news", "market_analysis",
+            "crypto_education", "crypto_project",
         ]
         return random.choice(afternoon_options)
-    
-    # Evening Post (8-10 PM): INTERACTIVE & VISUAL CONTENT
-    elif 20 <= hour < 22:
+
+    # Evening fill (7-9 PM)
+    elif 19 <= hour <= 21:
         evening_options = [
             "image_plus_text", "poll", "daily_challenge",
-            "thread", "market_analysis"
+            "thread", "market_analysis",
         ]
         return random.choice(evening_options)
-    
-    # Late Night Post (11 PM-12 AM): TRENDING & ANALYSIS (Optional 4th post)
+
+    # Late fill (11 PM - 12 AM)
     elif 23 <= hour < 24:
-        late_night_options = [
-            "trending_coins", "market_analysis", "crypto_prices"
+        late_options = [
+            "trending_coins", "market_analysis", "crypto_news",
         ]
-        return random.choice(late_night_options)
-    
+        return random.choice(late_options)
+
     # Fallback for manual runs outside scheduled times
     else:
         all_options = [
@@ -84,6 +109,6 @@ def decide_post_type() -> str:
             "crypto_education", "trading_tips", "crypto_security",
             "defi_explained", "market_analysis", "crypto_project",
             "nft_knowledge", "beginner_guide", "crypto_terminology",
-            "daily_challenge", "image_plus_text", "poll", "thread"
+            "daily_challenge", "image_plus_text", "poll", "thread",
         ]
         return random.choice(all_options)
