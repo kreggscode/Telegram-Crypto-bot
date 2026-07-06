@@ -32,14 +32,22 @@ class CryptoDataClient:
             print(f"CoinGecko returned {len(data)} coins")
             crypto_list = []
             for coin in data:
+                rank = coin.get('market_cap_rank')
+                name = coin.get('name')
+                symbol = coin.get('symbol')
+                price = coin.get('current_price')
+                change = coin.get('price_change_percentage_24h')
+                mcap = coin.get('market_cap')
+                vol = coin.get('total_volume')
+
                 crypto_info = {
-                    'rank': coin.get('market_cap_rank', 'N/A'),
-                    'name': coin.get('name', 'Unknown'),
-                    'symbol': coin.get('symbol', '').upper(),
-                    'price': coin.get('current_price', 0),
-                    'change_24h': coin.get('price_change_percentage_24h', 0),
-                    'market_cap': coin.get('market_cap', 0),
-                    'volume_24h': coin.get('total_volume', 0),
+                    'rank': rank if rank is not None else 'N/A',
+                    'name': name if name is not None else 'Unknown',
+                    'symbol': str(symbol if symbol is not None else '').upper(),
+                    'price': float(price) if price is not None else 0.0,
+                    'change_24h': float(change) if change is not None else 0.0,
+                    'market_cap': float(mcap) if mcap is not None else 0.0,
+                    'volume_24h': float(vol) if vol is not None else 0.0,
                 }
                 crypto_list.append(crypto_info)
             
@@ -113,12 +121,18 @@ class CryptoDataClient:
                 
                 news_list = []
                 for item in news_items:
+                    title = item.get('title')
+                    body = item.get('body')
+                    url = item.get('url')
+                    source = item.get('source')
+                    published = item.get('published_on')
+                    
                     news_info = {
-                        'title': item.get('title', 'No title'),
-                        'body': item.get('body', '')[:200] + '...',  # Truncate
-                        'url': item.get('url', ''),
-                        'source': item.get('source', 'Unknown'),
-                        'published': item.get('published_on', 0)
+                        'title': title if title is not None else 'No title',
+                        'body': (body[:200] if body is not None else '') + '...',
+                        'url': url if url is not None else '',
+                        'source': source if source is not None else 'Unknown',
+                        'published': published if published is not None else 0
                     }
                     news_list.append(news_info)
                 
@@ -167,13 +181,13 @@ class CryptoDataClient:
             
             if data:
                 coin_id = list(data.keys())[0]
-                price = data[coin_id].get('usd', 0)
-                change = data[coin_id].get('usd_24h_change', 0)
+                price = data[coin_id].get('usd')
+                change = data[coin_id].get('usd_24h_change')
                 
                 return {
                     'symbol': symbol.upper(),
-                    'price': price,
-                    'change_24h': change
+                    'price': float(price) if price is not None else 0.0,
+                    'change_24h': float(change) if change is not None else 0.0
                 }
             return None
         except Exception as e:
@@ -190,11 +204,16 @@ class CryptoDataClient:
             
             for item in data.get('coins', [])[:7]:
                 coin = item.get('item', {})
+                name = coin.get('name')
+                symbol = coin.get('symbol')
+                rank = coin.get('market_cap_rank')
+                price_btc = coin.get('price_btc')
+                
                 trending.append({
-                    'name': coin.get('name', 'Unknown'),
-                    'symbol': coin.get('symbol', '').upper(),
-                    'rank': coin.get('market_cap_rank', 'N/A'),
-                    'price_btc': coin.get('price_btc', 0)
+                    'name': name if name is not None else 'Unknown',
+                    'symbol': str(symbol if symbol is not None else '').upper(),
+                    'rank': rank if rank is not None else 'N/A',
+                    'price_btc': float(price_btc) if price_btc is not None else 0.0
                 })
             
             return trending
