@@ -5,11 +5,17 @@ import requests
 from pycoingecko import CoinGeckoAPI
 from datetime import datetime
 import time
+from .config import COINGECKO_API_KEY
 
 
 class CryptoDataClient:
     def __init__(self):
-        self.cg = CoinGeckoAPI()
+        if COINGECKO_API_KEY:
+            print("Initializing CoinGecko API client with Demo API Key...")
+            self.cg = CoinGeckoAPI(demo_api_key=COINGECKO_API_KEY)
+        else:
+            print("Initializing CoinGecko API client without API Key (Public rate limits)...")
+            self.cg = CoinGeckoAPI()
         self.cryptocompare_base = "https://min-api.cryptocompare.com/data/v2"
         
     def get_top_cryptos(self, limit=15):
