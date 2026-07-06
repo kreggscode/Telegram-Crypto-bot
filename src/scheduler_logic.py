@@ -49,16 +49,9 @@ def decide_post_type() -> str:
     """
     hour = get_local_hour_24()
 
-    # ── 5 FIXED PRICE SLOTS (always posts crypto_prices) ──
-    price_slots = {
-        6:  "Morning Open   🌅",
-        10: "Mid-Morning    ☀️",
-        14: "Afternoon      🌤️",
-        18: "Evening        🌆",
-        22: "Night Close    🌙",
-    }
-
-    if hour in price_slots:
+    # ── 5 FIXED PRICE SLOTS (always posts crypto_prices with ±1 hour window for GitHub Actions delay) ──
+    price_hours = [6, 10, 14, 18, 22]
+    if any(abs(hour - slot_hour) <= 1 for slot_hour in price_hours):
         return "crypto_prices"
 
     # ── EDUCATIONAL / INTERACTIVE SLOTS (fill the remaining runs) ──
