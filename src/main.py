@@ -4,10 +4,32 @@ Main Bot Logic - Cryptocurrency Education & Data Bot
 from . import pollinations_client as ai
 from . import telegram_client as tg
 from . import scheduler_logic as sched
-from .templates import TEXT_TEMPLATES, IMAGE_TEMPLATES
+from .templates import TEXT_TEMPLATES, IMAGE_TEMPLATES, HASHTAGS
 from .crypto_data_client import crypto_client
 from .topic_rotator import get_varied_prompt, get_topic_and_varied_prompt
 import random
+
+CURRENT_POST_TYPE = None
+
+# Wrap tg.send_text to automatically append hashtags based on CURRENT_POST_TYPE
+_original_send_text = tg.send_text
+def custom_send_text(text, parse_mode="Markdown"):
+    global CURRENT_POST_TYPE
+    if CURRENT_POST_TYPE and CURRENT_POST_TYPE != "thread":
+        tags = HASHTAGS.get(CURRENT_POST_TYPE, "")
+        text = text + tags
+    return _original_send_text(text, parse_mode)
+tg.send_text = custom_send_text
+
+# Wrap tg.send_photo to automatically append hashtags based on CURRENT_POST_TYPE
+_original_send_photo = tg.send_photo
+def custom_send_photo(image_url, caption=""):
+    global CURRENT_POST_TYPE
+    if CURRENT_POST_TYPE:
+        tags = HASHTAGS.get(CURRENT_POST_TYPE, "")
+        caption = caption + tags
+    return _original_send_photo(image_url, caption)
+tg.send_photo = custom_send_photo
 
 
 def post_quiz_followup(topic: str):
@@ -259,6 +281,8 @@ def post_thread():
         if resp and resp.status_code == 200:
             post_quiz_followup("General Crypto deep-dive")
     else:
+        # Append thread tags to the last message of the thread
+        parts[-1] = parts[-1] + HASHTAGS.get("thread", "")
         tg.send_thread(parts)
         # Quizzes following threads are very effective
         post_quiz_followup("Crypto Thread Topic")
@@ -266,11 +290,13 @@ def post_thread():
 
 def main():
     """Main entry point - decides what type of post to make"""
+    global CURRENT_POST_TYPE
     import os
     post_type = os.getenv("POST_TYPE")
     if not post_type:
         post_type = sched.decide_post_type()
     print(f"Decided post type: {post_type}")
+    CURRENT_POST_TYPE = post_type
 
     # Map post types to functions
     post_functions = {

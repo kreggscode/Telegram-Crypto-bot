@@ -171,3 +171,22 @@ IMAGE_TEMPLATES = {
     "altcoin_universe": "cosmic space scene with various altcoin logos as planets orbiting around Bitcoin sun, creative digital art, vibrant space colors",
     "crypto_security": "digital fortress protecting cryptocurrency assets with encryption shields and security layers, professional tech illustration, blue and green",
 }
+
+HASHTAGS = {
+    "crypto_prices": "\n\n#Crypto #Cryptocurrency #CryptoPrices #Bitcoin #Ethereum #Altcoins #CryptoMarket #CryptoNews",
+    "crypto_news": "\n\n#CryptoNews #BitcoinNews #Cryptocurrency #Blockchain #Web3 #CryptoCommunity",
+    "trending_coins": "\n\n#TrendingCoins #Crypto #Altcoins #Gems #CryptoMarket #CoinGecko",
+    "trading_tips": "\n\n#TradingTips #CryptoTrading #DayTrading #TechnicalAnalysis #Investing #CryptoTraders",
+    "crypto_security": "\n\n#CryptoSecurity #Web3Security #SelfCustody #CryptoScams #HardwareWallet #ProtectYourCrypto",
+    "defi_explained": "\n\n#DeFi #DecentralizedFinance #YieldFarming #SmartContracts #LearnDeFi",
+    "market_analysis": "\n\n#MarketAnalysis #CryptoMarket #Bitcoin #Ethereum #TechnicalAnalysis #CryptoSentiment",
+    "crypto_project": "\n\n#CryptoProjects #Altcoins #Blockchain #Web3 #CryptoEcosystem",
+    "nft_knowledge": "\n\n#NFTs #DigitalArt #Web3 #NFTCommunity #Metaverse",
+    "beginner_guide": "\n\n#CryptoBeginners #LearnCrypto #Crypto101 #HowToCrypto #BlockchainBasics",
+    "crypto_terminology": "\n\n#CryptoTerminology #CryptoSlang #LearnCrypto #CryptoJargon #HODL",
+    "daily_challenge": "\n\n#DailyChallenge #CryptoQuiz #CryptoTrivia #Engagement #PlayToLearn",
+    "image_plus_text": "\n\n#CryptoEducation #LearnCrypto #Blockchain #DeFi #NFTs #Web3",
+    "poll": "\n\n#CryptoQuiz #CryptoPoll #Trivia #Engagement",
+    "thread": "\n\n#CryptoThread #DeepDive #CryptoEducation #BlockchainExplained",
+    "crypto_education": "\n\n#CryptoEducation #LearnCrypto #Blockchain #DeFi #NFTs #Web3"
+}
