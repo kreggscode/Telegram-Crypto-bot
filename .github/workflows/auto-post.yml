@@ -24,6 +24,11 @@ on:
   
   # Allow manual triggering from GitHub Actions tab
   workflow_dispatch:
+    inputs:
+      post_type:
+        description: 'Override post type (e.g. crypto_prices, crypto_news, etc.)'
+        required: false
+        default: ''
 
 jobs:
   post-crypto-content:
@@ -49,5 +54,6 @@ jobs:
           CHAT_ID: ${{ secrets.CHAT_ID }}
           POLLINATIONS_API_KEY: ${{ secrets.POLLINATIONS_API_KEY }}
           TIMEZONE_OFFSET_HOURS: ${{ secrets.TIMEZONE_OFFSET_HOURS }}
+          POST_TYPE: ${{ github.event.inputs.post_type }}
         run: |
           python -m src.main

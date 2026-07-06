@@ -266,7 +266,10 @@ def post_thread():
 
 def main():
     """Main entry point - decides what type of post to make"""
-    post_type = sched.decide_post_type()
+    import os
+    post_type = os.getenv("POST_TYPE")
+    if not post_type:
+        post_type = sched.decide_post_type()
     print(f"Decided post type: {post_type}")
 
     # Map post types to functions
