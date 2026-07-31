@@ -202,29 +202,25 @@ def post_daily_challenge():
 
 
 def post_image_plus_text():
-    """Post a visually impressive crypto image with educational content"""
-    # Randomly select a text template
+    """Post educational content WITHOUT image generation (disabled)."""
+    # Image generation disabled to stop Pollinations flux image costs.
+    # Falls back to posting a text-only educational post instead.
     text_options = [
         "crypto_education", "trading_tips", "defi_explained", 
         "nft_knowledge", "crypto_project", "market_analysis"
     ]
     selected_text = random.choice(text_options)
-    
-    # Select a crypto image
-    image_keys = list(IMAGE_TEMPLATES.keys())
-    selected_image = random.choice(image_keys)
-    
-    # Use topic rotation for varied captions
+
     base_prompt = TEXT_TEMPLATES[selected_text]
     topic, text_prompt = get_topic_and_varied_prompt(base_prompt, selected_text)
-    img_prompt = IMAGE_TEMPLATES[selected_image]
 
-    caption = ai.generate_text(text_prompt)
-    img_url = ai.image_url(img_prompt)
-
-    resp = tg.send_photo(img_url, caption)
-    if resp and resp.status_code == 200:
-        post_quiz_followup(topic)
+    content = ai.generate_text(text_prompt)
+    if content and "AI generation failed" not in content:
+        resp = tg.send_text(content)
+        if resp and resp.status_code == 200:
+            post_quiz_followup(topic)
+    else:
+        print("LOG: Text generation failed for image_plus_text fallback.")
 
 
 def post_poll():

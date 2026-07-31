@@ -80,10 +80,10 @@ def decide_post_type() -> str:
         ]
         return random.choice(afternoon_options)
 
-    # Evening fill (7-9 PM)
+    # Evening fill (7-9 PM)  (image_plus_text removed - image generation disabled)
     elif 19 <= hour <= 21:
         evening_options = [
-            "image_plus_text", "poll", "daily_challenge",
+            "poll", "daily_challenge",
             "thread", "market_analysis",
         ]
         return random.choice(evening_options)
@@ -95,13 +95,13 @@ def decide_post_type() -> str:
         ]
         return random.choice(late_options)
 
-    # Fallback for manual runs outside scheduled times
+    # Fallback for manual runs outside scheduled times (image_plus_text removed)
     else:
         all_options = [
             "crypto_prices", "crypto_news", "trending_coins",
             "crypto_education", "trading_tips", "crypto_security",
             "defi_explained", "market_analysis", "crypto_project",
             "nft_knowledge", "beginner_guide", "crypto_terminology",
-            "daily_challenge", "image_plus_text", "poll", "thread",
+            "daily_challenge", "poll", "thread",
         ]
         return random.choice(all_options)
