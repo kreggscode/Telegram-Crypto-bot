@@ -1,0 +1,21 @@
+name: Keepalive Workflow
+
+on:
+  schedule:
+    # Runs every 15 days at 00:00 UTC to keep scheduled workflows active
+    - cron: '0 0 1,15 * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prevent 60-day scheduled workflow deactivation
+        uses: gautamkrishnar/keepalive-workflow@v2
