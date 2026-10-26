@@ -173,20 +173,20 @@ IMAGE_TEMPLATES = {
 }
 
 HASHTAGS = {
-    "crypto_prices": "\n\n#Crypto #Cryptocurrency #CryptoPrices #Bitcoin #Ethereum #Altcoins #CryptoMarket #CryptoNews",
-    "crypto_news": "\n\n#CryptoNews #BitcoinNews #Cryptocurrency #Blockchain #Web3 #CryptoCommunity",
-    "trending_coins": "\n\n#TrendingCoins #Crypto #Altcoins #Gems #CryptoMarket #CoinGecko",
-    "trading_tips": "\n\n#TradingTips #CryptoTrading #DayTrading #TechnicalAnalysis #Investing #CryptoTraders",
-    "crypto_security": "\n\n#CryptoSecurity #Web3Security #SelfCustody #CryptoScams #HardwareWallet #ProtectYourCrypto",
-    "defi_explained": "\n\n#DeFi #DecentralizedFinance #YieldFarming #SmartContracts #LearnDeFi",
-    "market_analysis": "\n\n#MarketAnalysis #CryptoMarket #Bitcoin #Ethereum #TechnicalAnalysis #CryptoSentiment",
-    "crypto_project": "\n\n#CryptoProjects #Altcoins #Blockchain #Web3 #CryptoEcosystem",
-    "nft_knowledge": "\n\n#NFTs #DigitalArt #Web3 #NFTCommunity #Metaverse",
-    "beginner_guide": "\n\n#CryptoBeginners #LearnCrypto #Crypto101 #HowToCrypto #BlockchainBasics",
-    "crypto_terminology": "\n\n#CryptoTerminology #CryptoSlang #LearnCrypto #CryptoJargon #HODL",
-    "daily_challenge": "\n\n#DailyChallenge #CryptoQuiz #CryptoTrivia #Engagement #PlayToLearn",
-    "image_plus_text": "\n\n#CryptoEducation #LearnCrypto #Blockchain #DeFi #NFTs #Web3",
-    "poll": "\n\n#CryptoQuiz #CryptoPoll #Trivia #Engagement",
-    "thread": "\n\n#CryptoThread #DeepDive #CryptoEducation #BlockchainExplained",
-    "crypto_education": "\n\n#CryptoEducation #LearnCrypto #Blockchain #DeFi #NFTs #Web3"
+    "crypto_prices": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto Prices • Market Updates • Bitcoin • Altcoins\n🏷️ #Crypto #Cryptocurrency #CryptoPrices #Bitcoin #Ethereum #Altcoins #CryptoMarket #CryptoNews",
+    "crypto_news": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto News • Breaking Web3 • Market Trends\n🏷️ #CryptoNews #BitcoinNews #Cryptocurrency #Blockchain #Web3 #CryptoCommunity",
+    "trending_coins": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Trending Altcoins • CoinGecko Gems • Crypto Trends\n🏷️ #TrendingCoins #Crypto #Altcoins #Gems #CryptoMarket #CoinGecko",
+    "trading_tips": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto Trading • Technical Analysis • Risk Management\n🏷️ #TradingTips #CryptoTrading #DayTrading #TechnicalAnalysis #Investing #CryptoTraders",
+    "crypto_security": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto Security • Web3 • Self-Custody • Wallet Safety\n🏷️ #CryptoSecurity #Web3Security #SelfCustody #CryptoScams #HardwareWallet #ProtectYourCrypto",
+    "defi_explained": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: DeFi • Smart Contracts • Yield Farming • Liquidity Pools\n🏷️ #DeFi #DecentralizedFinance #YieldFarming #SmartContracts #LearnDeFi",
+    "market_analysis": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto Market • Bitcoin • Ethereum • Technical Analysis\n🏷️ #MarketAnalysis #CryptoMarket #Bitcoin #Ethereum #TechnicalAnalysis #CryptoSentiment",
+    "crypto_project": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Web3 Ecosystem • Altcoins • Layer 1 & 2 • Blockchain\n🏷️ #CryptoProjects #Altcoins #Blockchain #Web3 #CryptoEcosystem",
+    "nft_knowledge": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: NFTs • Digital Assets • Smart Contracts • Web3 Culture\n🏷️ #NFTs #DigitalArt #Web3 #NFTCommunity #Metaverse",
+    "beginner_guide": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto 101 • Blockchain Basics • Beginner Guide\n🏷️ #CryptoBeginners #LearnCrypto #Crypto101 #HowToCrypto #BlockchainBasics",
+    "crypto_terminology": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto Slang • Terminology • Blockchain Jargon\n🏷️ #CryptoTerminology #CryptoSlang #LearnCrypto #CryptoJargon #HODL",
+    "daily_challenge": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto Challenge • Daily Trivia • Knowledge Check\n🏷️ #DailyChallenge #CryptoQuiz #CryptoTrivia #Engagement #PlayToLearn",
+    "image_plus_text": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto Education • Visual Blockchain Guides • Web3\n🏷️ #CryptoEducation #LearnCrypto #Blockchain #DeFi #NFTs #Web3",
+    "poll": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto Poll • Community Trivia • Web3 Quiz\n🏷️ #CryptoQuiz #CryptoPoll #Trivia #Engagement",
+    "thread": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto Deep Dive • Educational Thread • Blockchain\n🏷️ #CryptoThread #DeepDive #CryptoEducation #BlockchainExplained",
+    "crypto_education": "\n\n━━━━━━━━━━━━━━━━━━━━\n🔍 Topics: Crypto Education • Bitcoin • DeFi • Web3 Mastery\n🏷️ #CryptoEducation #LearnCrypto #Blockchain #DeFi #NFTs #Web3"
 }
